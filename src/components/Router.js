@@ -4,14 +4,14 @@ import Auth from "../routes/Auth";
 import TopNav from "./TopNav";
 import Profile from "../routes/Profile";
 
-const AppRouter = ({ isLoggedIn }) => {
+const AppRouter = ({ isLoggedIn, userObj }) => {
   return (
     <BrowserRouter>
       {isLoggedIn && <TopNav />}
       <Routes>
         {isLoggedIn ? (
           <>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home userObj={userObj} />} />
             <Route path="/profile" element={<Profile />} />
           </>
         ) : (
