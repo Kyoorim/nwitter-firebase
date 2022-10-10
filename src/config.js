@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+
 // github에 올라가지 않도록 .env 처리 해줌
 // 보안과 관련된건 아님 왜냐하면 나중에 build하면 다 원래 키로 바뀌기 때문...
 const firebaseConfig = {
@@ -17,3 +19,4 @@ const app = initializeApp(firebaseConfig);
 export default app;
 export const authService = getAuth();
 export const dbService = getFirestore();
+export const storageService = getStorage();
