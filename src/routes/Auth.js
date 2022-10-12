@@ -1,53 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTwitter,
+  faGoogle,
+  faGithub,
+} from "@fortawesome/free-brands-svg-icons";
+import AuthForm from "../components/AuthForm";
 import { authService } from "../config";
 import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
   GithubAuthProvider,
 } from "firebase/auth";
 
 const Auth = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [newAccount, setNewAccount] = useState(true);
-  const [error, setError] = useState("");
-
   //email 과 password에 동시에 적용할 수 있는 onChange 함수
-  const onChange = (e) => {
-    // console.log(e.target.name)하면 email칸에 입력하면 email이 뜨고 password 칸에 입력하면 password가 뜬다
-    const {
-      target: { name, value },
-    } = e;
-    if (name === "email") {
-      // email 칸이 입력되었으면
-      setEmail(value);
-    } else if (name === "password") {
-      setPassword(value);
-    }
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      let data;
-      const auth = getAuth();
-      if (newAccount) {
-        //create account
-        data = await createUserWithEmailAndPassword(auth, email, password);
-      } else {
-        //login
-        data = await signInWithEmailAndPassword(auth, email, password);
-      }
-      console.log(data);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  const toggleAccount = () => setNewAccount((prev) => !prev);
 
   const onSocialClick = async (e) => {
     const {
@@ -68,39 +35,20 @@ const Auth = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          required
-          value={email}
-          onChange={onChange}
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          required
-          value={password}
-          onChange={onChange}
-        />
-        <input
-          type="submit"
-          value={newAccount ? "Create Account" : "Sign In"}
-        />
-        {error}
-      </form>
-      <span onClick={toggleAccount}>
-        {newAccount ? "Sign In" : "Create Account"}
-      </span>
-      <div>
-        <button name="google" onClick={onSocialClick}>
-          Continue with Google
+    <div className="authContainer">
+      <FontAwesomeIcon
+        icon={faTwitter}
+        color={"#04AAFF"}
+        size="3x"
+        style={{ marginBottom: 30 }}
+      />
+      <AuthForm />
+      <div className="authBtns">
+        <button onClick={onSocialClick} name="google" className="authBtn">
+          Continue with Google <FontAwesomeIcon icon={faGoogle} />
         </button>
-        <button name="github" onClick={onSocialClick}>
-          Continue with Github
+        <button onClick={onSocialClick} name="github" className="authBtn">
+          Continue with Github <FontAwesomeIcon icon={faGithub} />
         </button>
       </div>
     </div>

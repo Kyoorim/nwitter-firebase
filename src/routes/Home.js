@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { dbService, storageService } from "../config";
+import { dbService } from "../config";
 // import { collection, addDoc, getDocs } from "firebase/firestore";
-import {
-  collection,
-  addDoc,
-  onSnapshot,
-  query,
-  orderBy,
-} from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import Nweet from "../components/Nweet";
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
+
+import NweetForm from "../components/NweetForm";
 
 const Home = ({ userObj }) => {
-  const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
-  const [attachment, setAttachment] = useState("");
 
   // 1. 데이터 가져오는 "옛날 방식"
   // const getNweets = async () => {
@@ -45,88 +37,11 @@ const Home = ({ userObj }) => {
     });
   }, []);
 
-  const onSubmit = async (event) => {
-    event.preventDefault();
-    let attachmentUrl = "";
-
-    // 사진 추가하기
-    if (attachment) {
-      const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
-      const response = await uploadString(
-        attachmentRef,
-        attachment,
-        "data_url"
-      );
-      attachmentUrl = await getDownloadURL(response.ref);
-      // console.log(attachmentUrl);
-    }
-    const nweetObj = {
-      text: nweet,
-      createdAt: Date.now(),
-      creatorId: userObj.uid,
-      attachmentUrl,
-    };
-
-    await addDoc(collection(dbService, "ntweets"), nweetObj);
-    setNweet("");
-    setAttachment("");
-  };
-
-  // 트윗 추가하기
-  // await addDoc(collection(dbService, "ntweets"), {
-  //   text: nweet,
-  //   createdAt: Date.now(),
-  //   creatorId: userObj.uid,
-  // });
-  // setNweet("");
-  // };
-  const onChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setNweet(value);
-  };
-
-  const onFileChange = (event) => {
-    // console.log(event.target.files); // file list를 보여줌
-    const {
-      target: { files },
-    } = event;
-    const theFile = files[0];
-    const reader = new FileReader();
-    reader.onloadend = (finishedEvent) => {
-      // console.log(finishedEvent)
-      const {
-        currentTarget: { result },
-      } = finishedEvent;
-      setAttachment(result);
-    };
-    reader.readAsDataURL(theFile);
-  };
-
-  const onClearAttachement = () => {
-    setAttachment(null);
-  };
   // console.log(nweets);
   return (
-    <>
-      <form onSubmit={onSubmit}>
-        <input
-          value={nweet}
-          onChange={onChange}
-          type="text"
-          placeholder="what's on your mind?"
-        ></input>
-        <input type="file" accept="image/*" onChange={onFileChange} />
-        <input type="submit" value="Ntweet"></input>
-        {attachment && (
-          <div>
-            <img src={attachment} alt="thumnail" width="50px" height="50px" />
-            <button onClick={onClearAttachement}> Clear </button>
-          </div>
-        )}
-      </form>
-      <div>
+    <div className="container">
+      <NweetForm userObj={userObj} />
+      <div style={{ marginTop: 30 }}>
         {nweets.map((nweet) => (
           // <div key={nweet.id}>
           //   <h4>{nweet.text}</h4>
@@ -138,7 +53,7 @@ const Home = ({ userObj }) => {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

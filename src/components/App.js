@@ -40,7 +40,17 @@ const App = () => {
   };
 
   return (
-    <>
+    <div
+      style={{
+        maxWidth: 890,
+        width: "100%",
+        margin: "0 auto",
+        marginTop: 80,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
       {init ? (
         <AppRouter
           refreshUser={refreshUser}
@@ -51,7 +61,7 @@ const App = () => {
         "Initializing..."
       )}
       <footer>&copy; {new Date().getFullYear()} Nwitter </footer>
-    </>
+    </div>
   );
 };
 export default App;
